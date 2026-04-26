@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(timeout 10 tail:*)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(for i in 1 2 3 4 5)",
+      "Bash(do curl -s http://localhost:3000/genre/action)",
+      "Bash(break)",
+      "Bash(done)",
+      "Bash(tree:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run dev:*)"
+    ]
+  }
+}
