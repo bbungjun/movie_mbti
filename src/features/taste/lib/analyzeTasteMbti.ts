@@ -3,8 +3,38 @@ import { STREAMING_CONTENTS } from '../data/streamingContents';
 import { ContentRating, StreamingContent, TasteAxisResult, TasteMbtiResult } from '../types';
 import { recommendContents } from './recommendContents';
 
+const TRAIT_KEYS = [
+  'stimulation',
+  'emotion',
+  'imagination',
+  'realism',
+  'structure',
+  'relationship',
+  'closure',
+  'novelty',
+] as const;
+
+const TRAIT_AVERAGES = STREAMING_CONTENTS.reduce(
+  (acc, content, _, contents) => {
+    TRAIT_KEYS.forEach((key) => {
+      acc[key] += content.traits[key] / contents.length;
+    });
+    return acc;
+  },
+  {
+    stimulation: 0,
+    emotion: 0,
+    imagination: 0,
+    realism: 0,
+    structure: 0,
+    relationship: 0,
+    closure: 0,
+    novelty: 0,
+  }
+);
+
 function getConfidence(leftScore: number, rightScore: number): TasteAxisResult['confidence'] {
-  const total = leftScore + rightScore || 1;
+  const total = Math.abs(leftScore) + Math.abs(rightScore) || 1;
   const gap = Math.abs(leftScore - rightScore) / total;
   if (gap > 0.22) return 'high';
   if (gap > 0.1) return 'medium';
@@ -19,13 +49,14 @@ function buildAxisResult(
   rightScore: number,
   label: string,
   leftLabel: string,
-  rightLabel: string
+  rightLabel: string,
+  selectedCode: string = leftScore >= rightScore ? leftCode : rightCode
 ): TasteAxisResult {
   return {
     axis,
     leftCode,
     rightCode,
-    selectedCode: leftScore >= rightScore ? leftCode : rightCode,
+    selectedCode,
     label,
     leftLabel,
     rightLabel,
@@ -33,6 +64,14 @@ function buildAxisResult(
     leftScore,
     rightScore,
   };
+}
+
+function pickTieBreaker(seed: string, leftCode: string, rightCode: string) {
+  const hash = Array.from(seed).reduce(
+    (acc, character) => acc + character.charCodeAt(0),
+    0
+  );
+  return hash % 2 === 0 ? leftCode : rightCode;
 }
 
 export function analyzeTasteMbti(
@@ -50,9 +89,10 @@ export function analyzeTasteMbti(
 
   const score = ratedContents.reduce(
     (acc, item) => {
-      const weight = item.rating.rating;
-      Object.entries(item.content.traits).forEach(([key, value]) => {
-        acc[key as keyof typeof acc] += value * weight;
+      const preferenceWeight = item.rating.rating - 3;
+      TRAIT_KEYS.forEach((key) => {
+        acc[key] +=
+          (item.content.traits[key] - TRAIT_AVERAGES[key]) * preferenceWeight;
       });
       return acc;
     },
@@ -68,8 +108,39 @@ export function analyzeTasteMbti(
     }
   );
 
+  const buildPreferenceAxisResult = (
+    axis: TasteAxisResult['axis'],
+    leftCode: string,
+    rightCode: string,
+    leftScore: number,
+    rightScore: number,
+    label: string,
+    leftLabel: string,
+    rightLabel: string
+  ) => {
+    const differential = leftScore - rightScore;
+    const selectedCode =
+      Math.abs(differential) < 0.0001
+        ? pickTieBreaker(`${sessionId}:${axis}`, leftCode, rightCode)
+        : differential > 0
+          ? leftCode
+          : rightCode;
+
+    return buildAxisResult(
+      axis,
+      leftCode,
+      rightCode,
+      Math.max(differential, 0),
+      Math.max(-differential, 0),
+      label,
+      leftLabel,
+      rightLabel,
+      selectedCode
+    );
+  };
+
   const axisResults = [
-    buildAxisResult(
+    buildPreferenceAxisResult(
       'energy',
       'E',
       'I',
@@ -79,7 +150,7 @@ export function analyzeTasteMbti(
       '자극 반응',
       '감정 몰입'
     ),
-    buildAxisResult(
+    buildPreferenceAxisResult(
       'world',
       'N',
       'S',
@@ -89,7 +160,7 @@ export function analyzeTasteMbti(
       '세계관 탐색',
       '현실 공감'
     ),
-    buildAxisResult(
+    buildPreferenceAxisResult(
       'decision',
       'T',
       'F',
@@ -99,7 +170,7 @@ export function analyzeTasteMbti(
       '플롯 완성도',
       '관계 서사'
     ),
-    buildAxisResult(
+    buildPreferenceAxisResult(
       'rhythm',
       'J',
       'P',
@@ -113,10 +184,18 @@ export function analyzeTasteMbti(
 
   const code = axisResults.map((axis) => axis.selectedCode).join('');
   const copy = RESULT_COPY[code] ?? FALLBACK_RESULT_COPY;
-  const topTraits = Object.entries(score)
+  const preferredTraits = Object.entries(score)
     .sort((a, b) => b[1] - a[1])
+    .filter(([, value]) => value > 0)
     .slice(0, 3)
     .map(([trait]) => trait);
+  const topTraits =
+    preferredTraits.length > 0
+      ? preferredTraits
+      : Object.entries(score)
+          .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+          .slice(0, 3)
+          .map(([trait]) => trait);
 
   return {
     ...copy,
