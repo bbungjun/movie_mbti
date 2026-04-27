@@ -1,13 +1,21 @@
 export type ContentType = 'movie' | 'series';
 
 export interface TasteTraits {
+  /** 사건 밀도, 긴장감, 액션성 */
   stimulation: number;
+  /** 감정선, 여운, 내면 묘사 */
   emotion: number;
+  /** 세계관, 설정 신선도, 콘셉트의 강도 */
   imagination: number;
+  /** 생활감, 사회성, 현실적 설득력 */
   realism: number;
+  /** 플롯 정교함, 복선/회수, 완성도 */
   structure: number;
+  /** 캐릭터 관계, 케미, 공감성 */
   relationship: number;
+  /** 결말 만족도, 정리감, 완주 보상 */
   closure: number;
+  /** 변주, 예측불가, 형식적 새로움 */
   novelty: number;
 }
 
@@ -34,6 +42,8 @@ export interface TasteAxisResult {
   rightCode: string;
   selectedCode: string;
   label: string;
+  leftLabel: string;
+  rightLabel: string;
   confidence: 'high' | 'medium' | 'mixed';
   leftScore: number;
   rightScore: number;

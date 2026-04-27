@@ -1,12 +1,26 @@
 'use client';
 
+import { getTMDBImageUrl } from '@/lib/utils';
 import { useTasteTest } from '../hooks/useTasteTest';
+import { TasteAnalyzingShuffle } from './TasteAnalyzingShuffle';
 import { TasteContentCard } from './TasteContentCard';
 import { TasteProgress } from './TasteProgress';
 import { TasteTestFooter } from './TasteTestFooter';
 
 export function TasteTestFlow() {
   const test = useTasteTest();
+
+  if (test.isAnalyzing) {
+    return (
+      <TasteAnalyzingShuffle
+        cards={test.analysisPreviewContents.map((content) => ({
+          img: getTMDBImageUrl(content.posterPath, 'w500'),
+          chip: content.genres[0] ?? 'NETFLIX',
+          title: content.title,
+        }))}
+      />
+    );
+  }
 
   return (
     <section className="relative mx-auto w-full max-w-6xl px-4 py-6 md:py-12">

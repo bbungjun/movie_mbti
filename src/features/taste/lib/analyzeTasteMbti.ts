@@ -17,7 +17,9 @@ function buildAxisResult(
   rightCode: string,
   leftScore: number,
   rightScore: number,
-  label: string
+  label: string,
+  leftLabel: string,
+  rightLabel: string
 ): TasteAxisResult {
   return {
     axis,
@@ -25,6 +27,8 @@ function buildAxisResult(
     rightCode,
     selectedCode: leftScore >= rightScore ? leftCode : rightCode,
     label,
+    leftLabel,
+    rightLabel,
     confidence: getConfidence(leftScore, rightScore),
     leftScore,
     rightScore,
@@ -65,10 +69,46 @@ export function analyzeTasteMbti(
   );
 
   const axisResults = [
-    buildAxisResult('energy', 'E', 'I', score.stimulation, score.emotion, '몰입 방식'),
-    buildAxisResult('world', 'N', 'S', score.imagination, score.realism, '세계 인식'),
-    buildAxisResult('decision', 'T', 'F', score.structure, score.relationship, '감상 포인트'),
-    buildAxisResult('rhythm', 'J', 'P', score.closure, score.novelty, '시청 리듬'),
+    buildAxisResult(
+      'energy',
+      'E',
+      'I',
+      score.stimulation,
+      score.emotion,
+      '몰입 방향',
+      '자극 반응',
+      '감정 몰입'
+    ),
+    buildAxisResult(
+      'world',
+      'N',
+      'S',
+      score.imagination,
+      score.realism,
+      '선호 세계',
+      '세계관 탐색',
+      '현실 공감'
+    ),
+    buildAxisResult(
+      'decision',
+      'T',
+      'F',
+      score.structure,
+      score.relationship,
+      '선호 포인트',
+      '플롯 완성도',
+      '관계 서사'
+    ),
+    buildAxisResult(
+      'rhythm',
+      'J',
+      'P',
+      score.closure,
+      score.novelty,
+      '시청 리듬',
+      '정리된 결말',
+      '새로운 변주'
+    ),
   ];
 
   const code = axisResults.map((axis) => axis.selectedCode).join('');

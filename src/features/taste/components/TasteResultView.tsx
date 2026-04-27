@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getTMDBImageUrl } from '@/lib/utils';
 import { STREAMING_CONTENTS, getContentById } from '../data/streamingContents';
 import { getTasteResult } from '../storage/localTasteResultStorage';
-import { TasteMbtiResult } from '../types';
+import { TasteAxisResult, TasteMbtiResult } from '../types';
 
 declare global {
   interface Window {
@@ -33,6 +33,10 @@ const TRAIT_LABELS: Record<string, string> = {
 
 interface TasteResultViewProps {
   resultId: string;
+}
+
+function getSelectedAxisLabel(axis: TasteAxisResult) {
+  return axis.selectedCode === axis.leftCode ? axis.leftLabel : axis.rightLabel;
 }
 
 export function TasteResultView({ resultId }: TasteResultViewProps) {
@@ -65,7 +69,7 @@ export function TasteResultView({ resultId }: TasteResultViewProps) {
   const getSharePayload = () => {
     if (!result) return;
     const url = window.location.href;
-    const text = `내 Netflix 취향 MBTI는 ${result.code}, ${result.title}!`;
+    const text = `내 Netflix 작품 취향 코드는 ${result.code}, ${result.title}!`;
 
     return { url, text };
   };
@@ -89,7 +93,7 @@ export function TasteResultView({ resultId }: TasteResultViewProps) {
 
     if (navigator.share) {
       await navigator.share({
-        title: 'Netflix 취향 MBTI 결과',
+        title: 'Netflix 작품 취향 코드 결과',
         text: payload.text,
         url: payload.url,
       });
@@ -141,7 +145,7 @@ export function TasteResultView({ resultId }: TasteResultViewProps) {
       window.Kakao.Share?.sendDefault({
         objectType: 'feed',
         content: {
-          title: `내 Netflix 취향 MBTI는 ${result.code}`,
+          title: `내 Netflix 작품 취향 코드는 ${result.code}`,
           description: `${result.title} - ${result.subtitle}`,
           imageUrl: `${window.location.origin}/placeholder-poster.svg`,
           link: {
@@ -222,7 +226,7 @@ export function TasteResultView({ resultId }: TasteResultViewProps) {
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-netflix-red" />
                 </span>
                 <span className="text-xs font-semibold tracking-wide text-netflix-red md:text-sm">
-                  Your Taste MBTI
+                  작품 취향 코드
                 </span>
               </div>
 
@@ -237,6 +241,9 @@ export function TasteResultView({ resultId }: TasteResultViewProps) {
               </p>
               <p className="mt-4 text-sm leading-relaxed text-neutral-300 md:mt-6 md:text-lg">
                 {result.description}
+              </p>
+              <p className="mt-3 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs leading-relaxed text-neutral-400 md:text-sm">
+                이 결과는 작품 평가 패턴을 바탕으로 만든 콘텐츠 취향 분석입니다.
               </p>
 
               {/* Share buttons - Full width on mobile */}
@@ -326,6 +333,12 @@ export function TasteResultView({ resultId }: TasteResultViewProps) {
                         <span className="text-[10px] text-neutral-400 md:text-sm">{axis.label}</span>
                         <span className="text-lg font-black text-netflix-red md:text-2xl">{axis.selectedCode}</span>
                       </div>
+                      <p className="mt-1 text-sm font-semibold text-white md:text-base">
+                        {getSelectedAxisLabel(axis)}
+                      </p>
+                      <p className="mt-1 text-[10px] text-neutral-500 md:text-xs">
+                        {axis.leftLabel} ↔ {axis.rightLabel}
+                      </p>
                       <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-800 md:mt-3 md:h-2">
                         <div
                           className="h-full rounded-full bg-gradient-to-r from-netflix-red to-netflix-red-hover transition-all duration-500"
@@ -341,9 +354,9 @@ export function TasteResultView({ resultId }: TasteResultViewProps) {
                       </div>
                       <p className="mt-1.5 text-[10px] text-neutral-500 md:mt-2 md:text-xs">
                         {axis.confidence === 'mixed'
-                          ? '혼합'
+                          ? '균형형'
                           : axis.confidence === 'medium'
-                            ? '약간 우세'
+                            ? '조금 더 뚜렷'
                             : '뚜렷함'}
                       </p>
                     </div>

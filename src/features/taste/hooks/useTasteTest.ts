@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createNewSession } from '@/lib/utils';
 import { STREAMING_CONTENTS } from '../data/streamingContents';
@@ -16,6 +16,7 @@ export function useTasteTest() {
   const [ratings, setRatings] = useState<Record<string, number>>({});
   const [skippedIds, setSkippedIds] = useState<Set<string>>(() => new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingResultId, setPendingResultId] = useState<string | null>(null);
 
   const currentContent = TEST_CONTENTS[currentIndex];
   const currentRating = ratings[currentContent.id] ?? 0;
@@ -25,6 +26,7 @@ export function useTasteTest() {
   const answeredCount = ratedCount + skippedCount;
   const canSubmit = ratedCount >= MIN_REQUIRED_RATINGS;
   const isLast = currentIndex === TEST_CONTENTS.length - 1;
+  const isAnalyzing = pendingResultId !== null;
 
   const topRatedPreview = useMemo(() => {
     return Object.entries(ratings)
@@ -34,6 +36,35 @@ export function useTasteTest() {
       .filter(Boolean)
       .join(', ');
   }, [ratings]);
+
+  const analysisPreviewContents = useMemo(() => {
+    const orderedContentIds = Object.entries(ratings)
+      .sort((a, b) => b[1] - a[1])
+      .map(([contentId]) => contentId);
+
+    const fallbackContentIds = TEST_CONTENTS.map((content) => content.id);
+    const uniqueIds = Array.from(
+      new Set([...orderedContentIds, ...fallbackContentIds])
+    ).slice(0, 5);
+
+    return uniqueIds
+      .map((contentId) =>
+        TEST_CONTENTS.find((content) => content.id === contentId)
+      )
+      .filter(
+        (content): content is (typeof TEST_CONTENTS)[number] => Boolean(content)
+      );
+  }, [ratings]);
+
+  useEffect(() => {
+    if (!pendingResultId) return;
+
+    const timeout = window.setTimeout(() => {
+      router.push(`/result/${pendingResultId}`);
+    }, 4000);
+
+    return () => window.clearTimeout(timeout);
+  }, [pendingResultId, router]);
 
   const rateCurrentContent = (rating: number) => {
     setRatings((current) => ({ ...current, [currentContent.id]: rating }));
@@ -66,7 +97,7 @@ export function useTasteTest() {
   };
 
   const submit = () => {
-    if (!canSubmit || isSubmitting) return;
+    if (!canSubmit || isSubmitting || isAnalyzing) return;
 
     setIsSubmitting(true);
     const sessionId = createNewSession();
@@ -79,10 +110,11 @@ export function useTasteTest() {
       skippedContentIds
     );
     saveTasteResult(result);
-    router.push(`/result/${result.id}`);
+    setPendingResultId(result.id);
   };
 
   return {
+    analysisPreviewContents,
     currentContent,
     currentIndex,
     currentRating,
@@ -92,6 +124,7 @@ export function useTasteTest() {
     answeredCount,
     canSubmit,
     isLast,
+    isAnalyzing,
     isSubmitting,
     topRatedPreview,
     totalCount: TEST_CONTENTS.length,

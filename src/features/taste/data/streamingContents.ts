@@ -21,7 +21,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2022',
     providers: ['netflix'],
     summary: '학교에 퍼진 좀비 바이러스 속에서 생존과 관계가 시험대에 오른다.',
-    traits: { stimulation: 92, emotion: 72, imagination: 62, realism: 62, structure: 70, relationship: 78, closure: 58, novelty: 70 },
+    traits: { stimulation: 92, emotion: 74, imagination: 64, realism: 58, structure: 68, relationship: 82, closure: 54, novelty: 76 },
   },
   {
     id: 'the-glory',
@@ -32,7 +32,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2022',
     providers: ['netflix'],
     summary: '오랜 시간 설계된 복수와 인물들의 균열을 따라가는 한국 드라마.',
-    traits: { stimulation: 78, emotion: 88, imagination: 34, realism: 92, structure: 92, relationship: 84, closure: 90, novelty: 56 },
+    traits: { stimulation: 76, emotion: 90, imagination: 28, realism: 94, structure: 94, relationship: 86, closure: 92, novelty: 40 },
   },
   {
     id: 'when-life-gives-you-tangerines',
@@ -43,7 +43,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2025',
     providers: ['netflix'],
     summary: '제주에서 시작된 사랑과 삶의 굴곡을 긴 시간의 흐름으로 따라가는 휴먼 로맨스.',
-    traits: { stimulation: 28, emotion: 98, imagination: 26, realism: 94, structure: 78, relationship: 96, closure: 86, novelty: 44 },
+    traits: { stimulation: 24, emotion: 98, imagination: 22, realism: 96, structure: 80, relationship: 98, closure: 90, novelty: 36 },
   },
   {
     id: 'trauma-code',
@@ -65,7 +65,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2019',
     providers: ['netflix'],
     summary: '조선의 권력 다툼과 역병 재난을 결합한 장르 사극.',
-    traits: { stimulation: 90, emotion: 58, imagination: 82, realism: 54, structure: 84, relationship: 62, closure: 62, novelty: 88 },
+    traits: { stimulation: 92, emotion: 56, imagination: 86, realism: 50, structure: 86, relationship: 58, closure: 60, novelty: 90 },
   },
   {
     id: 'sweet-home',
@@ -87,7 +87,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2021',
     providers: ['netflix'],
     summary: '지옥행 고지와 시연이 사회를 뒤흔들며 믿음과 권력이 충돌하는 디스토피아 호러.',
-    traits: { stimulation: 82, emotion: 50, imagination: 92, realism: 52, structure: 84, relationship: 50, closure: 48, novelty: 92 },
+    traits: { stimulation: 80, emotion: 46, imagination: 94, realism: 48, structure: 76, relationship: 46, closure: 40, novelty: 94 },
   },
   {
     id: 'dp',
@@ -98,7 +98,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2021',
     providers: ['netflix'],
     summary: '군무이탈 체포조의 시선으로 부조리와 상처를 마주하는 현실 드라마.',
-    traits: { stimulation: 52, emotion: 92, imagination: 18, realism: 96, structure: 72, relationship: 90, closure: 78, novelty: 48 },
+    traits: { stimulation: 48, emotion: 94, imagination: 14, realism: 98, structure: 74, relationship: 92, closure: 80, novelty: 34 },
   },
   {
     id: 'mask-girl',
@@ -131,7 +131,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2023',
     providers: ['netflix'],
     summary: 'SNS 셀럽 세계의 욕망과 추락을 따라가는 미스터리 드라마.',
-    traits: { stimulation: 62, emotion: 64, imagination: 28, realism: 84, structure: 78, relationship: 80, closure: 70, novelty: 58 },
+    traits: { stimulation: 60, emotion: 62, imagination: 32, realism: 86, structure: 76, relationship: 82, closure: 66, novelty: 64 },
   },
   {
     id: 'gyeongseong-creature',
@@ -153,7 +153,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2024',
     providers: ['netflix'],
     summary: '우발적 살인 이후 기묘한 정의감과 추적이 뒤엉키는 범죄 스릴러.',
-    traits: { stimulation: 78, emotion: 54, imagination: 58, realism: 78, structure: 88, relationship: 56, closure: 62, novelty: 86 },
+    traits: { stimulation: 76, emotion: 50, imagination: 62, realism: 76, structure: 90, relationship: 52, closure: 58, novelty: 90 },
   },
   {
     id: 'parasyte-the-grey',
@@ -197,7 +197,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2023',
     providers: ['netflix'],
     summary: '극심한 대기오염으로 무너진 미래 사회에서 전설적인 택배기사가 움직인다.',
-    traits: { stimulation: 86, emotion: 48, imagination: 92, realism: 34, structure: 64, relationship: 52, closure: 56, novelty: 78 },
+    traits: { stimulation: 84, emotion: 44, imagination: 94, realism: 28, structure: 58, relationship: 48, closure: 50, novelty: 84 },
   },
   {
     id: 'the-8-show',
@@ -208,7 +208,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2024',
     providers: ['netflix'],
     summary: '8명의 참가자가 시간이 돈이 되는 밀폐 공간에서 욕망과 폭력을 드러내는 서바이벌 풍자극.',
-    traits: { stimulation: 82, emotion: 52, imagination: 74, realism: 66, structure: 84, relationship: 54, closure: 58, novelty: 92 },
+    traits: { stimulation: 84, emotion: 48, imagination: 78, realism: 62, structure: 86, relationship: 50, closure: 54, novelty: 94 },
   },
   {
     id: 'the-silent-sea',
@@ -219,7 +219,7 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     year: '2021',
     providers: ['netflix'],
     summary: '황폐해진 지구를 구할 단서를 찾기 위해 달 기지로 향한 대원들의 SF 미스터리.',
-    traits: { stimulation: 64, emotion: 48, imagination: 94, realism: 38, structure: 78, relationship: 50, closure: 58, novelty: 82 },
+    traits: { stimulation: 60, emotion: 44, imagination: 96, realism: 32, structure: 82, relationship: 46, closure: 52, novelty: 86 },
   },
 ];
 
