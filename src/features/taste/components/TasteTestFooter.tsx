@@ -5,7 +5,7 @@ interface TasteTestFooterProps {
   isLast: boolean;
   canSubmit: boolean;
   isSubmitting: boolean;
-  minRequiredRatings: number;
+  ratedCount: number;
   onPrevious: () => void;
   onNext: () => void;
   onSubmit: () => void;
@@ -16,7 +16,7 @@ export function TasteTestFooter({
   isLast,
   canSubmit,
   isSubmitting,
-  minRequiredRatings,
+  ratedCount,
   onPrevious,
   onNext,
   onSubmit,
@@ -29,12 +29,14 @@ export function TasteTestFooter({
       <div className="relative mx-auto max-w-lg space-y-3 pb-4 pt-3 md:space-y-4 md:pb-6 md:pt-4">
         {/* Status message - Compact on mobile */}
         <div className="flex items-center justify-center">
-          {canSubmit ? (
+          {isLast && canSubmit ? (
             <div className="flex items-center gap-1.5 rounded-full bg-green-500/10 px-3 py-1.5 md:gap-2 md:px-4 md:py-2">
               <svg className="h-3.5 w-3.5 text-green-400 md:h-4 md:w-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span className="text-xs font-semibold text-green-400 md:text-sm">결과를 볼 수 있어요!</span>
+              <span className="text-xs font-semibold text-green-400 md:text-sm">
+                지금 결과를 볼 수 있어요.
+              </span>
             </div>
           ) : (
             <div className="flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 md:gap-2 md:px-4 md:py-2">
@@ -42,11 +44,17 @@ export function TasteTestFooter({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span className="text-xs text-neutral-400 md:text-sm">
-                최소 <span className="font-semibold text-white">{minRequiredRatings}개</span> 평가 필요
+                작품을 <span className="font-semibold text-white">1개 이상</span> 평가하면 결과를 볼 수 있어요.
               </span>
             </div>
           )}
         </div>
+
+        <p className="text-center text-xs leading-relaxed text-neutral-500 md:text-sm">
+          {ratedCount > 0
+            ? '평가를 많이 남길수록 취향 분석과 추천 결과가 더 정확해져요.'
+            : '몇 작품만 먼저 평가해도 결과를 볼 수 있고, 많이 평가할수록 더 정확한 추천을 받을 수 있어요.'}
+        </p>
 
         {/* Navigation buttons - Full width on mobile */}
         <div className="grid grid-cols-2 gap-2 md:gap-3">
@@ -110,20 +118,6 @@ export function TasteTestFooter({
           )}
         </div>
 
-        {/* Early submit option - More prominent on mobile when available */}
-        {!isLast && canSubmit && (
-          <button
-            type="button"
-            onClick={onSubmit}
-            disabled={isSubmitting}
-            className="group flex h-11 w-full items-center justify-center gap-1.5 rounded-xl border border-netflix-red/30 bg-netflix-red/5 text-sm font-semibold text-netflix-red transition-all active:border-netflix-red/50 active:bg-netflix-red/10 disabled:border-neutral-700 disabled:bg-transparent disabled:text-neutral-500 md:h-12 md:gap-2 md:hover:border-netflix-red/50 md:hover:bg-netflix-red/10"
-          >
-            <svg className="h-3.5 w-3.5 md:h-4 md:w-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-            </svg>
-            지금 바로 결과 확인하기
-          </button>
-        )}
       </div>
 
       {/* Safe area spacer for iOS */}

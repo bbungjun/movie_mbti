@@ -1,7 +1,7 @@
 'use client';
 
 import { getTMDBImageUrl } from '@/lib/utils';
-import { useTasteTest } from '../hooks/useTasteTest';
+import { useTasteTest } from '../context/TasteTestContext';
 import { TasteAnalyzingShuffle } from './TasteAnalyzingShuffle';
 import { TasteContentCard } from './TasteContentCard';
 import { TasteProgress } from './TasteProgress';
@@ -90,7 +90,7 @@ export function TasteTestFlow() {
           isLast={test.isLast}
           canSubmit={test.canSubmit}
           isSubmitting={test.isSubmitting}
-          minRequiredRatings={test.minRequiredRatings}
+          ratedCount={test.ratedCount}
           onPrevious={test.goPrevious}
           onNext={test.goNext}
           onSubmit={test.submit}

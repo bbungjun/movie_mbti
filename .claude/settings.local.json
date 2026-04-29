@@ -12,7 +12,13 @@
       "Bash(done)",
       "Bash(tree:*)",
       "Bash(npm run lint:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(node *)",
+      "WebSearch",
+      "WebFetch(domain:about.netflix.com)",
+      "WebFetch(domain:namu.wiki)",
+      "Bash(npx tsc *)",
+      "Bash(npx tsx -e ' *)"
     ]
   }
 }

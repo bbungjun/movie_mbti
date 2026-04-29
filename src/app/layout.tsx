@@ -56,6 +56,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${inter.variable} ${notoSansKr.variable}`}>
+      <head>
+        <meta name="mobile-web-app-capable" content="yes" />
+      </head>
       <body className="bg-netflix-black font-sans text-white antialiased safe-top safe-bottom">
         {children}
       </body>

@@ -15,7 +15,13 @@ export function RatingControls({
   onRate,
   onSkip,
 }: RatingControlsProps) {
-  const ratingLabels = ['별로', '그냥', '볼만', '좋음', '최고'];
+  const ratingLabels = [
+    '전혀 관심이 없어요',
+    '관심이 적어요',
+    '보통이에요',
+    '재미있게 봤어요',
+    '굉장히 재미있었어요',
+  ];
 
   return (
     <div className="space-y-3 md:space-y-4">
@@ -97,9 +103,9 @@ export function RatingControls({
       </div>
 
       {/* Rating scale indicator - Hidden on very small screens */}
-      <div className="hidden justify-between text-[10px] text-neutral-600 min-[360px]:flex">
-        <span>1점: 별로였어요</span>
-        <span>5점: 인생작!</span>
+      <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[11px] leading-relaxed text-neutral-400">
+        <span className="font-semibold text-neutral-300">별점 기준</span>
+        <span className="block">1점 전혀 관심이 없어요 · 2점 관심이 적어요 · 3점 보통이에요 · 4점 재미있게 봤어요 · 5점 굉장히 재미있었어요</span>
       </div>
     </div>
   );

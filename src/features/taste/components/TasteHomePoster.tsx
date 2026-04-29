@@ -1,11 +1,11 @@
 interface TasteHomePosterProps {
   posterUrl: string;
-  startHref: string;
+  onStart: () => void;
 }
 
 export function TasteHomePoster({
   posterUrl,
-  startHref,
+  onStart,
 }: TasteHomePosterProps) {
   return (
     <section className="mm-screen mm-home-screen">
@@ -74,9 +74,12 @@ export function TasteHomePoster({
           <span>즉시 결과</span>
         </div>
 
-        <a href={startHref} className="mm-cta mm-cta--glow">
+        <button 
+          onClick={onStart}
+          className="mm-cta mm-cta--glow w-full sm:w-auto"
+        >
           테스트 시작하기 <span className="mm-cta-arrow">›</span>
-        </a>
+        </button>
         <div className="mm-note">무료 · 로그인 없이 바로 시작</div>
       </main>
     </section>

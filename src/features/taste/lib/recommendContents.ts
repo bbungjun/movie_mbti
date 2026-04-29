@@ -1,15 +1,18 @@
 import { STREAMING_CONTENTS } from '../data/streamingContents';
-import { ContentRating, StreamingContent, TasteAxisResult, TasteTraits } from '../types';
+import {
+  ContentRating,
+  StreamingContent,
+  TasteAxisResult,
+  TasteProfileAxes,
+} from '../types';
 
-const TRAIT_KEYS: Array<keyof TasteTraits> = [
-  'stimulation',
-  'emotion',
-  'imagination',
-  'realism',
-  'structure',
-  'relationship',
-  'closure',
-  'novelty',
+const PROFILE_KEYS: Array<keyof TasteProfileAxes> = [
+  'dopamine',
+  'afterglow',
+  'concept',
+  'emotionDriven',
+  'plotDriven',
+  'relationshipDriven',
 ];
 
 function buildTasteProfile(ratings: ContentRating[]) {
@@ -30,21 +33,21 @@ function buildTasteProfile(ratings: ContentRating[]) {
   const weightedTotals = ratedContents.reduce(
     (acc, item) => {
       const weight = item.rating.rating;
-      TRAIT_KEYS.forEach((key) => {
-        acc[key] += item.content.traits[key] * weight;
+      const { profileAxes } = item.content;
+
+      PROFILE_KEYS.forEach((key) => {
+        acc[key] += profileAxes[key] * weight;
       });
       acc.totalWeight += weight;
       return acc;
     },
     {
-      stimulation: 0,
-      emotion: 0,
-      imagination: 0,
-      realism: 0,
-      structure: 0,
-      relationship: 0,
-      closure: 0,
-      novelty: 0,
+      dopamine: 0,
+      afterglow: 0,
+      concept: 0,
+      emotionDriven: 0,
+      plotDriven: 0,
+      relationshipDriven: 0,
       totalWeight: 0,
     }
   );
@@ -52,27 +55,26 @@ function buildTasteProfile(ratings: ContentRating[]) {
   const totalWeight = weightedTotals.totalWeight || 1;
 
   return {
-    stimulation: weightedTotals.stimulation / totalWeight,
-    emotion: weightedTotals.emotion / totalWeight,
-    imagination: weightedTotals.imagination / totalWeight,
-    realism: weightedTotals.realism / totalWeight,
-    structure: weightedTotals.structure / totalWeight,
-    relationship: weightedTotals.relationship / totalWeight,
-    closure: weightedTotals.closure / totalWeight,
-    novelty: weightedTotals.novelty / totalWeight,
+    dopamine: weightedTotals.dopamine / totalWeight,
+    afterglow: weightedTotals.afterglow / totalWeight,
+    concept: weightedTotals.concept / totalWeight,
+    emotionDriven: weightedTotals.emotionDriven / totalWeight,
+    plotDriven: weightedTotals.plotDriven / totalWeight,
+    relationshipDriven: weightedTotals.relationshipDriven / totalWeight,
   };
 }
 
 function getAxisScore(content: StreamingContent, preferred: Set<string>) {
+  const { profileAxes } = content;
   let score = 0;
-  if (preferred.has('E')) score += content.traits.stimulation;
-  if (preferred.has('I')) score += content.traits.emotion;
-  if (preferred.has('N')) score += content.traits.imagination;
-  if (preferred.has('S')) score += content.traits.realism;
-  if (preferred.has('T')) score += content.traits.structure;
-  if (preferred.has('F')) score += content.traits.relationship;
-  if (preferred.has('J')) score += content.traits.closure;
-  if (preferred.has('P')) score += content.traits.novelty;
+
+  if (preferred.has('D')) score += profileAxes.dopamine;
+  if (preferred.has('A')) score += profileAxes.afterglow;
+  if (preferred.has('C')) score += profileAxes.concept;
+  if (preferred.has('E')) score += profileAxes.emotionDriven;
+  if (preferred.has('P')) score += profileAxes.plotDriven;
+  if (preferred.has('R')) score += profileAxes.relationshipDriven;
+
   return score;
 }
 
@@ -82,20 +84,21 @@ function getGenreSimilarity(content: StreamingContent, reference: StreamingConte
   return sharedCount / Math.max(content.genres.length, reference.genres.length, 1);
 }
 
-function getTraitSimilarity(content: StreamingContent, reference: StreamingContent) {
-  const distance = TRAIT_KEYS.reduce((sum, key) => sum + Math.abs(content.traits[key] - reference.traits[key]), 0);
-  return 1 - distance / (TRAIT_KEYS.length * 100);
-}
+const MAX_L2_DISTANCE = 100 * Math.sqrt(PROFILE_KEYS.length);
 
-function getProfileSimilarity(content: StreamingContent, profile: TasteTraits | null) {
+function getProfileSimilarity(
+  content: StreamingContent,
+  profile: TasteProfileAxes | null
+) {
   if (!profile) return 0;
 
-  const distance = TRAIT_KEYS.reduce(
-    (sum, key) => sum + Math.abs(content.traits[key] - profile[key]),
+  const { profileAxes: contentProfile } = content;
+  const squaredDistance = PROFILE_KEYS.reduce(
+    (sum, key) => sum + Math.pow(contentProfile[key] - profile[key], 2),
     0
   );
 
-  return 1 - distance / (TRAIT_KEYS.length * 100);
+  return 1 - Math.sqrt(squaredDistance) / MAX_L2_DISTANCE;
 }
 
 function getPreferenceReferences(ratings: ContentRating[]) {
@@ -104,7 +107,10 @@ function getPreferenceReferences(ratings: ContentRating[]) {
       rating,
       content: STREAMING_CONTENTS.find((item) => item.id === rating.contentId),
     }))
-    .filter((item): item is { rating: ContentRating; content: StreamingContent } => Boolean(item.content));
+    .filter(
+      (item): item is { rating: ContentRating; content: StreamingContent } =>
+        Boolean(item.content)
+    );
 
   const fiveStarContents = ratedContents.filter((item) => item.rating.rating === 5);
   if (fiveStarContents.length > 0) return fiveStarContents;
@@ -130,14 +136,18 @@ export function recommendContents(
     .filter((content) => !ratedIds.has(content.id))
     .map((content) => {
       const referenceScore = preferenceReferences.reduce((sum, reference) => {
-        const genreScore = getGenreSimilarity(content, reference.content) * 50;
-        const traitScore = getTraitSimilarity(content, reference.content) * 20;
+        const genreScore = getGenreSimilarity(content, reference.content) * 45;
+        const profileScore =
+          getProfileSimilarity(content, reference.content.profileAxes) * 25;
         const ratingWeight = reference.rating.rating / 5;
-        return sum + (genreScore + traitScore) * ratingWeight;
+        return sum + (genreScore + profileScore) * ratingWeight;
       }, 0);
-      const averageReferenceScore = preferenceReferences.length > 0 ? referenceScore / preferenceReferences.length : 0;
+      const averageReferenceScore =
+        preferenceReferences.length > 0
+          ? referenceScore / preferenceReferences.length
+          : 0;
       const profileScore = getProfileSimilarity(content, tasteProfile) * 30;
-      const axisScore = getAxisScore(content, preferred) * 0.03;
+      const axisScore = getAxisScore(content, preferred) * 0.04;
       const skippedScore = skippedIds.has(content.id) ? 8 : 0;
       const score = averageReferenceScore + profileScore + axisScore + skippedScore;
       return { id: content.id, score };

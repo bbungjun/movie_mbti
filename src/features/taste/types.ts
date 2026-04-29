@@ -19,6 +19,15 @@ export interface TasteTraits {
   novelty: number;
 }
 
+export interface TasteProfileAxes {
+  dopamine: number;
+  afterglow: number;
+  concept: number;
+  emotionDriven: number;
+  plotDriven: number;
+  relationshipDriven: number;
+}
+
 export interface StreamingContent {
   id: string;
   title: string;
@@ -29,6 +38,7 @@ export interface StreamingContent {
   summary: string;
   providers: string[];
   traits: TasteTraits;
+  profileAxes: TasteProfileAxes;
 }
 
 export interface ContentRating {
@@ -37,7 +47,7 @@ export interface ContentRating {
 }
 
 export interface TasteAxisResult {
-  axis: 'energy' | 'world' | 'decision' | 'rhythm';
+  axis: 'pace' | 'drive' | 'focus';
   leftCode: string;
   rightCode: string;
   selectedCode: string;
@@ -58,13 +68,15 @@ export interface TasteResultCopy {
   watchStyle: string;
 }
 
-export interface TasteMbtiResult extends TasteResultCopy {
+export interface TasteProfileResult extends TasteResultCopy {
   id: string;
   sessionId: string;
   axisResults: TasteAxisResult[];
-  topTraits: string[];
+  topTraits: Array<keyof TasteProfileAxes>;
   ratings: ContentRating[];
   skippedContentIds: string[];
   recommendedContentIds: string[];
   createdAt: string;
 }
+
+export type TasteMbtiResult = TasteProfileResult;
