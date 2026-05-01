@@ -1,8 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import { getTMDBImageUrl } from '@/lib/utils';
+import { getTMDBImageUrl, getTMDBPosterSrcSet } from '@/lib/utils';
 import { StreamingContent, TasteMbtiResult } from '../../types';
 import { getTopTraitLabel } from './tasteResultLabels';
 
@@ -106,12 +105,16 @@ export function TasteResultContentSection({
                     className="w-32 shrink-0 overflow-hidden rounded-lg bg-neutral-800 transition-all duration-300 active:scale-95 md:w-auto md:rounded-xl md:hover:scale-105 md:hover:shadow-card"
                   >
                     <div className="relative aspect-[2/3] overflow-hidden">
-                      <Image
-                        src={getTMDBImageUrl(content.posterPath, 'w500')}
+                      {/* TMDB CDN sizes are enough for these small recommendation posters. */}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={getTMDBImageUrl(content.posterPath, 'w185')}
+                        srcSet={getTMDBPosterSrcSet(content.posterPath)}
                         alt={content.title}
-                        fill
-                        className="object-cover"
+                        className="absolute inset-0 h-full w-full object-cover"
                         sizes="(max-width: 768px) 128px, 160px"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                     <div className="p-2 md:p-3">

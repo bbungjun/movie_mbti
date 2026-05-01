@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { getTMDBImageUrl } from '@/lib/utils';
 import { useTasteTest } from '../context/TasteTestContext';
 import { TasteAnalyzingShuffle } from './TasteAnalyzingShuffle';
@@ -9,6 +10,23 @@ import { TasteTestFooter } from './TasteTestFooter';
 
 export function TasteTestFlow() {
   const test = useTasteTest();
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const isSmallScreen = window.matchMedia('(max-width: 640px)').matches;
+    const posterSize = isSmallScreen ? 'w342' : 'w500';
+
+    test.testContents
+      .slice(test.currentIndex, test.currentIndex + 3)
+      .forEach((content) => {
+        const poster = new window.Image();
+        poster.decoding = 'async';
+        poster.src = getTMDBImageUrl(content.posterPath, posterSize);
+      });
+  }, [test.currentIndex, test.testContents]);
 
   if (test.isAnalyzing) {
     return (

@@ -1,7 +1,6 @@
 'use client';
 
-import Image from 'next/image';
-import { getTMDBImageUrl } from '@/lib/utils';
+import { getTMDBImageUrl, getTMDBPosterSrcSet } from '@/lib/utils';
 import { StreamingContent } from '../types';
 import { RatingControls } from './RatingControls';
 
@@ -33,15 +32,18 @@ export function TasteContentCard({
       >
         {/* Poster Section - Shorter aspect ratio on mobile */}
         <div className="relative aspect-[3/4] overflow-hidden bg-neutral-800 sm:aspect-[2/3]">
-          <Image
-            src={getTMDBImageUrl(content.posterPath, 'w500')}
+          {/* TMDB already serves CDN-resized posters; direct srcSet avoids cold Vercel optimizer hops between cards. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={getTMDBImageUrl(content.posterPath, 'w342')}
+            srcSet={getTMDBPosterSrcSet(content.posterPath)}
             alt={content.title}
-            fill
-            className={`object-cover transition-all duration-500 ${
+            className={`absolute inset-0 h-full w-full object-cover transition-all duration-500 ${
               isSkipped ? 'scale-105 opacity-30 grayscale' : ''
             }`}
-            sizes="(max-width: 640px) 100vw, 512px"
-            priority
+            sizes="(max-width: 640px) 92vw, 512px"
+            loading="eager"
+            decoding="async"
           />
 
           {/* Gradient overlay */}

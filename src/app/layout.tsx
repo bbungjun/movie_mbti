@@ -58,6 +58,8 @@ export default function RootLayout({
     <html lang="ko" className={`${inter.variable} ${notoSansKr.variable}`}>
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
+        <link rel="preconnect" href="https://image.tmdb.org" />
+        <link rel="dns-prefetch" href="https://image.tmdb.org" />
       </head>
       <body className="bg-netflix-black font-sans text-white antialiased safe-top safe-bottom">
         {children}

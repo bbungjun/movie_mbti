@@ -31,12 +31,24 @@ export function createNewSession(): string {
 
 export function getTMDBImageUrl(
   path: string | null,
-  size: 'w200' | 'w300' | 'w500' | 'w780' | 'original' = 'w500'
+  size: 'w92' | 'w154' | 'w185' | 'w342' | 'w500' | 'w780' | 'original' = 'w500'
 ): string {
   if (!path) {
     return '/placeholder-poster.svg';
   }
   return `https://image.tmdb.org/t/p/${size}${path}`;
+}
+
+export function getTMDBPosterSrcSet(path: string | null): string | undefined {
+  if (!path) {
+    return undefined;
+  }
+
+  return [
+    `${getTMDBImageUrl(path, 'w185')} 185w`,
+    `${getTMDBImageUrl(path, 'w342')} 342w`,
+    `${getTMDBImageUrl(path, 'w500')} 500w`,
+  ].join(', ');
 }
 
 export function formatDate(dateString: string): string {
