@@ -2,7 +2,7 @@ import { ContentRating, TasteMbtiResult } from '../types';
 
 const STORAGE_KEYS = {
   RESULTS: 'tasteProfileResultsV2',
-  IN_PROGRESS: 'tasteTestInProgressV2',
+  IN_PROGRESS: 'tasteTestInProgressV3',
 } as const;
 
 export interface InProgressTasteTest {

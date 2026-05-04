@@ -41,15 +41,15 @@ export function TasteTestFlow() {
   }
 
   return (
-    <section className="relative mx-auto w-full max-w-6xl px-4 py-6 md:py-12">
+    <section className="relative mx-auto flex h-[100dvh] w-full max-w-6xl flex-col overflow-hidden px-3 py-2 md:h-auto md:min-h-screen md:overflow-visible md:px-4 md:py-12">
       {/* Background glow effect - smaller on mobile */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-10 h-32 w-32 -translate-x-1/2 rounded-full bg-netflix-red/5 blur-3xl md:top-20 md:h-64 md:w-64" />
       </div>
 
-      <div className="relative">
+      <div className="relative flex min-h-0 flex-1 flex-col">
         {/* Header - Compact on mobile */}
-        <div className="mb-5 flex flex-col gap-3 md:mb-8 md:flex-row md:items-end md:justify-between md:gap-4">
+        <div className="mb-2 flex shrink-0 items-center justify-between gap-2 md:mb-8 md:items-end md:gap-4">
           <div>
             {/* Step indicator - Always visible on mobile */}
             <div className="inline-flex items-center gap-2 rounded-full bg-white/5 px-2.5 py-1 md:px-3 md:py-1.5">
@@ -58,21 +58,21 @@ export function TasteTestFlow() {
                 {test.currentIndex + 1} / {test.totalCount}
               </span>
             </div>
-            <h2 className="mt-2 text-xl font-black tracking-tight text-white md:mt-4 md:text-3xl">
+            <h2 className="mt-1 text-base font-black tracking-tight text-white md:mt-4 md:text-3xl">
               이 작품, 어땠나요?
             </h2>
           </div>
 
           {/* Stats Badge - Simplified on mobile */}
-          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-sm md:gap-3 md:px-5 md:py-3">
+          <div className="flex shrink-0 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-2.5 py-1.5 backdrop-blur-sm md:gap-3 md:px-5 md:py-3">
             <div className="text-center">
-              <p className="text-lg font-black text-netflix-red md:text-2xl">{test.ratedCount}</p>
+              <p className="text-base font-black text-netflix-red md:text-2xl">{test.ratedCount}</p>
               <p className="text-[10px] text-neutral-500 md:text-xs">평가</p>
             </div>
             <div className="h-6 w-px bg-white/10 md:h-8" />
             <div className="text-center">
-              <p className="text-lg font-black text-neutral-400 md:text-2xl">{test.skippedCount}</p>
-              <p className="text-[10px] text-neutral-500 md:text-xs">스킵</p>
+              <p className="text-base font-black text-neutral-400 md:text-2xl">{test.skippedCount}</p>
+              <p className="text-[10px] text-neutral-500 md:text-xs">안봄</p>
             </div>
             {/* Top rated - hidden on mobile for space */}
             {test.topRatedPreview && (

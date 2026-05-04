@@ -20,7 +20,7 @@ export function TasteContentCard({
   onSkip,
 }: TasteContentCardProps) {
   return (
-    <article className="group mx-auto max-w-lg animate-scale-in">
+    <article className="group mx-auto min-h-0 w-full max-w-lg flex-1 animate-scale-in md:flex-none">
       <div
         className={`overflow-hidden rounded-2xl border bg-neutral-900 shadow-card transition-all duration-300 ${
           isSkipped
@@ -31,13 +31,17 @@ export function TasteContentCard({
         }`}
       >
         {/* Poster Section - Shorter aspect ratio on mobile */}
-        <div className="relative aspect-[3/4] overflow-hidden bg-neutral-800 sm:aspect-[2/3]">
+        <div className="relative h-[36dvh] min-h-[220px] overflow-hidden bg-neutral-800 sm:aspect-[2/3] sm:h-auto">
           {/* TMDB already serves CDN-resized posters; direct srcSet avoids cold Vercel optimizer hops between cards. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={getTMDBImageUrl(content.posterPath, 'w342')}
             srcSet={getTMDBPosterSrcSet(content.posterPath)}
             alt={content.title}
+            onError={(event) => {
+              event.currentTarget.src = '/placeholder-poster.svg';
+              event.currentTarget.srcset = '';
+            }}
             className={`absolute inset-0 h-full w-full object-cover transition-all duration-500 ${
               isSkipped ? 'scale-105 opacity-30 grayscale' : ''
             }`}
@@ -50,8 +54,8 @@ export function TasteContentCard({
           <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/20 to-transparent" />
 
           {/* Top badges - Smaller on mobile */}
-          <div className="absolute left-0 right-0 top-0 flex items-start justify-between p-3 md:p-4">
-            <div className="flex flex-col gap-1.5 md:gap-2">
+          <div className="absolute left-0 right-0 top-0 flex items-start justify-between p-2.5 md:p-4">
+            <div className="flex flex-col gap-1 md:gap-2">
               <span className="inline-flex items-center gap-1 rounded-md bg-black/70 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm md:gap-1.5 md:px-3 md:py-1.5 md:text-xs">
                 {content.type === 'series' ? (
                   <>
@@ -98,22 +102,22 @@ export function TasteContentCard({
           )}
 
           {/* Bottom content info overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
-            <h3 className="text-shadow-lg text-2xl font-black text-white md:text-3xl">
+          <div className="absolute bottom-0 left-0 right-0 p-3 md:p-5">
+            <h3 className="text-shadow-lg line-clamp-2 text-xl font-black text-white md:text-3xl">
               {content.title}
             </h3>
           </div>
         </div>
 
         {/* Content Section - More compact on mobile */}
-        <div className="space-y-4 p-4 md:space-y-5 md:p-5">
+        <div className="space-y-2 p-3 md:space-y-5 md:p-5">
           {/* Summary - 2 lines on mobile */}
-          <p className="line-clamp-2 text-sm leading-relaxed text-neutral-400">
+          <p className="hidden text-sm leading-relaxed text-neutral-400 md:line-clamp-2">
             {content.summary}
           </p>
 
           {/* Genre Tags - Scrollable on mobile */}
-          <div className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:gap-2 md:overflow-visible md:px-0 md:pb-0">
+          <div className="hidden gap-1.5 overflow-x-auto pb-1 md:mx-0 md:flex md:flex-wrap md:gap-2 md:overflow-visible md:px-0 md:pb-0">
             {content.genres.map((genre) => (
               <span
                 key={genre}
@@ -125,7 +129,7 @@ export function TasteContentCard({
           </div>
 
           {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="hidden h-px bg-gradient-to-r from-transparent via-white/10 to-transparent md:block" />
 
           {/* Rating Controls */}
           <RatingControls

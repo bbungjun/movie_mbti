@@ -111,6 +111,10 @@ export function TasteResultContentSection({
                         src={getTMDBImageUrl(content.posterPath, 'w185')}
                         srcSet={getTMDBPosterSrcSet(content.posterPath)}
                         alt={content.title}
+                        onError={(event) => {
+                          event.currentTarget.src = '/placeholder-poster.svg';
+                          event.currentTarget.srcset = '';
+                        }}
                         className="absolute inset-0 h-full w-full object-cover"
                         sizes="(max-width: 768px) 128px, 160px"
                         loading="lazy"

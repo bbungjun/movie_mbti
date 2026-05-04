@@ -7,12 +7,12 @@ interface TasteProgressProps {
 }
 
 export function TasteProgress({ currentIndex, totalCount, answeredCount }: TasteProgressProps) {
-  const progress = ((currentIndex + 1) / totalCount) * 100;
+  const progress = totalCount > 0 ? (answeredCount / totalCount) * 100 : 0;
 
   return (
-    <div className="mx-auto mb-5 max-w-lg md:mb-8">
+    <div className="mx-auto mb-2 w-full max-w-lg shrink-0 md:mb-8">
       {/* Progress indicators - Compact on mobile */}
-      <div className="mb-2 flex items-center justify-between md:mb-3">
+      <div className="mb-1.5 flex items-center justify-between md:mb-3">
         <div className="flex items-center gap-1.5 md:gap-2">
           <span className="text-sm font-semibold text-white md:text-base">
             {currentIndex + 1}
@@ -29,7 +29,7 @@ export function TasteProgress({ currentIndex, totalCount, answeredCount }: Taste
       </div>
 
       {/* Progress bar - Thicker touch target on mobile */}
-      <div className="relative h-2 overflow-hidden rounded-full bg-neutral-800 md:h-1.5">
+      <div className="relative h-1.5 overflow-hidden rounded-full bg-neutral-800 md:h-1.5">
         {/* Animated progress overlay */}
         <div
           className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-netflix-red to-netflix-red-hover transition-all duration-500 ease-out"

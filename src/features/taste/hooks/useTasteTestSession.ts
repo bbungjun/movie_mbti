@@ -6,20 +6,8 @@ import { selectTestContents } from '../lib/selectTestContents';
 import { InProgressTasteTest } from '../storage/localTasteResultStorage';
 import { StreamingContent } from '../types';
 
-function shuffleArray<T>(items: T[]): T[] {
-  const shuffled = [...items];
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[swapIndex]] = [
-      shuffled[swapIndex],
-      shuffled[index],
-    ];
-  }
-  return shuffled;
-}
-
 function createSelectedTestContents() {
-  return shuffleArray(selectTestContents(STREAMING_CONTENTS, 10));
+  return selectTestContents(STREAMING_CONTENTS, 10);
 }
 
 function getSavedTestContents(saved: InProgressTasteTest | null) {
@@ -34,6 +22,31 @@ function getSavedTestContents(saved: InProgressTasteTest | null) {
   return orderedContents.length > 0
     ? orderedContents
     : createSelectedTestContents();
+}
+
+function findReplacementContent(
+  currentContent: StreamingContent,
+  testContents: StreamingContent[],
+  skippedIds: Set<string>,
+  ratings: Record<string, number>
+) {
+  const unavailableIds = new Set([
+    ...testContents.map((content) => content.id),
+    ...Array.from(skippedIds),
+    ...Object.keys(ratings),
+  ]);
+
+  unavailableIds.add(currentContent.id);
+
+  const candidates = STREAMING_CONTENTS.filter(
+    (content) => !unavailableIds.has(content.id)
+  );
+
+  if (candidates.length === 0) {
+    return null;
+  }
+
+  return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
 export function useTasteTestSession() {
@@ -71,7 +84,7 @@ export function useTasteTestSession() {
   const isSkipped = currentContent ? skippedIds.has(currentContent.id) : false;
   const ratedCount = Object.keys(ratings).length;
   const skippedCount = skippedIds.size;
-  const answeredCount = ratedCount + skippedCount;
+  const answeredCount = ratedCount;
   const canSubmit = ratedCount > 0;
   const isLast =
     testContents.length > 0 && currentIndex === testContents.length - 1;
@@ -114,15 +127,6 @@ export function useTasteTestSession() {
       return;
     }
 
-    if (skippedIds.has(currentContent.id)) {
-      setSkippedIds((current) => {
-        const next = new Set(current);
-        next.delete(currentContent.id);
-        return next;
-      });
-      return;
-    }
-
     setRatings((current) => {
       const next = { ...current };
       delete next[currentContent.id];
@@ -135,10 +139,30 @@ export function useTasteTestSession() {
       return next;
     });
 
-    if (!isLast) {
-      setCurrentIndex((index) => Math.min(testContents.length - 1, index + 1));
+    const replacementContent = findReplacementContent(
+      currentContent,
+      testContents,
+      skippedIds,
+      ratings
+    );
+
+    if (replacementContent) {
+      setTestContents((current) =>
+        current.map((content, index) =>
+          index === currentIndex ? replacementContent : content
+        )
+      );
+      return;
     }
-  }, [currentContent, isLast, skippedIds, testContents.length]);
+
+    return;
+  }, [
+    currentContent,
+    currentIndex,
+    ratings,
+    skippedIds,
+    testContents,
+  ]);
 
   const goPrevious = useCallback(() => {
     setCurrentIndex((index) => Math.max(0, index - 1));

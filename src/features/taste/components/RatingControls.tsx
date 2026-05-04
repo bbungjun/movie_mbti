@@ -24,10 +24,10 @@ export function RatingControls({
   ];
 
   return (
-    <div className="space-y-3 md:space-y-4">
+    <div className="space-y-2 md:space-y-4">
       {/* Rating label - Simplified on mobile */}
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-neutral-400">
+        <span className="text-xs font-medium text-neutral-400 md:text-sm">
           {rating > 0 ? (
             <span className="text-white">{ratingLabels[rating - 1]}</span>
           ) : (
@@ -53,7 +53,7 @@ export function RatingControls({
               key={value}
               type="button"
               onClick={() => onRate(value)}
-              className={`star-btn relative flex h-12 flex-1 items-center justify-center rounded-xl border text-base font-black transition-all md:h-14 md:text-lg ${
+              className={`star-btn relative flex h-11 flex-1 items-center justify-center rounded-xl border text-base font-black transition-all md:h-14 md:text-lg ${
                 rating >= value
                   ? 'border-netflix-red bg-netflix-red text-white shadow-lg shadow-netflix-red/30'
                   : 'border-white/10 bg-white/5 text-neutral-500 active:border-netflix-red/50 active:bg-netflix-red/10 active:text-netflix-red md:hover:border-netflix-red/50 md:hover:bg-netflix-red/10 md:hover:text-netflix-red'
@@ -75,11 +75,12 @@ export function RatingControls({
           ))}
         </div>
 
-        {/* Skip button - Always visible with icon */}
+        {/* Not watched button - swaps this title for another candidate */}
         <button
           type="button"
           onClick={onSkip}
-          className={`flex h-12 shrink-0 items-center justify-center gap-1.5 rounded-xl border px-3 text-sm font-bold transition-all md:h-14 md:gap-2 md:px-4 ${
+          aria-label={`${contentTitle} 안봤어요`}
+          className={`flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl border px-2.5 text-sm font-bold transition-all md:h-14 md:gap-2 md:px-4 ${
             isSkipped
               ? 'border-neutral-600 bg-neutral-700 text-white'
               : 'border-white/10 bg-white/5 text-neutral-400 active:border-neutral-500 active:bg-neutral-800 active:text-white md:hover:border-neutral-500 md:hover:bg-neutral-800 md:hover:text-white'
@@ -98,12 +99,12 @@ export function RatingControls({
               d="M13 5l7 7-7 7M5 5l7 7-7 7"
             />
           </svg>
-          <span className="hidden min-[400px]:inline">{isSkipped ? '취소' : 'Skip'}</span>
+          <span className="hidden min-[400px]:inline">안봤어요</span>
         </button>
       </div>
 
       {/* Rating scale indicator - Hidden on very small screens */}
-      <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[11px] leading-relaxed text-neutral-400">
+      <div className="hidden rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-[11px] leading-relaxed text-neutral-400 md:block">
         <span className="font-semibold text-neutral-300">별점 기준</span>
         <span className="block">1점 전혀 관심이 없어요 · 2점 관심이 적어요 · 3점 보통이에요 · 4점 재미있게 봤어요 · 5점 굉장히 재미있었어요</span>
       </div>
