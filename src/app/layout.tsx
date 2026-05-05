@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Noto_Sans_KR } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 
 const inter = Inter({
@@ -13,6 +14,8 @@ const notoSansKr = Noto_Sans_KR({
   variable: '--font-noto-sans-kr',
   display: 'swap',
 });
+
+const clarityProjectId = process.env.NEXT_PUBLIC_MICROSOFT_CLARITY_ID;
 
 export const metadata: Metadata = {
   title: '넷플릭스 시리즈로 알아보는 작품 취향 코드',
@@ -63,6 +66,17 @@ export default function RootLayout({
       </head>
       <body className="bg-netflix-black font-sans text-white antialiased safe-top safe-bottom">
         {children}
+        {clarityProjectId ? (
+          <Script id="microsoft-clarity" strategy="afterInteractive">
+            {`
+              (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "${clarityProjectId}");
+            `}
+          </Script>
+        ) : null}
       </body>
     </html>
   );
