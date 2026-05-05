@@ -20,7 +20,7 @@ export function TasteContentCard({
   onSkip,
 }: TasteContentCardProps) {
   return (
-    <article className="group mx-auto min-h-0 w-full max-w-lg flex-1 animate-scale-in md:flex-none">
+    <article className="group mx-auto min-h-0 w-full max-w-[340px] shrink-0 animate-scale-in sm:max-w-lg">
       <div
         className={`overflow-hidden rounded-2xl border bg-neutral-900 shadow-card transition-all duration-300 ${
           isSkipped
@@ -31,7 +31,7 @@ export function TasteContentCard({
         }`}
       >
         {/* Poster Section - Shorter aspect ratio on mobile */}
-        <div className="relative h-[36dvh] min-h-[220px] overflow-hidden bg-neutral-800 sm:aspect-[2/3] sm:h-auto">
+        <div className="relative h-[31dvh] min-h-[178px] overflow-hidden bg-neutral-800 sm:aspect-[2/3] sm:h-auto">
           {/* TMDB already serves CDN-resized posters; direct srcSet avoids cold Vercel optimizer hops between cards. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -54,9 +54,9 @@ export function TasteContentCard({
           <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/20 to-transparent" />
 
           {/* Top badges - Smaller on mobile */}
-          <div className="absolute left-0 right-0 top-0 flex items-start justify-between p-2.5 md:p-4">
+          <div className="absolute left-0 right-0 top-0 flex items-start justify-between p-2 md:p-4">
             <div className="flex flex-col gap-1 md:gap-2">
-              <span className="inline-flex items-center gap-1 rounded-md bg-black/70 px-2 py-1 text-[10px] font-semibold text-white backdrop-blur-sm md:gap-1.5 md:px-3 md:py-1.5 md:text-xs">
+              <span className="inline-flex items-center gap-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm md:gap-1.5 md:rounded-md md:px-3 md:py-1.5 md:text-xs">
                 {content.type === 'series' ? (
                   <>
                     <svg className="h-3 w-3 md:h-3.5 md:w-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -73,18 +73,18 @@ export function TasteContentCard({
                   </>
                 )}
               </span>
-              <span className="inline-flex rounded-md bg-netflix-red/90 px-2 py-1 text-[10px] font-bold text-white backdrop-blur-sm md:px-3 md:py-1.5 md:text-xs">
+              <span className="inline-flex rounded bg-netflix-red/90 px-1.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm md:rounded-md md:px-3 md:py-1.5 md:text-xs">
                 {content.year}
               </span>
             </div>
 
             {/* Rating display */}
             {rating > 0 && !isSkipped && (
-              <div className="flex items-center gap-0.5 rounded-lg bg-netflix-red px-2 py-1.5 shadow-lg md:gap-1 md:px-3 md:py-2">
+              <div className="flex items-center gap-0.5 rounded-md bg-netflix-red px-1.5 py-1 shadow-lg md:gap-1 md:rounded-lg md:px-3 md:py-2">
                 <svg className="h-3.5 w-3.5 text-white md:h-4 md:w-4" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
-                <span className="text-base font-black text-white md:text-lg">{rating}</span>
+                <span className="text-sm font-black text-white md:text-lg">{rating}</span>
               </div>
             )}
           </div>
@@ -102,15 +102,15 @@ export function TasteContentCard({
           )}
 
           {/* Bottom content info overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-3 md:p-5">
-            <h3 className="text-shadow-lg line-clamp-2 text-xl font-black text-white md:text-3xl">
+          <div className="absolute bottom-0 left-0 right-0 p-2.5 md:p-5">
+            <h3 className="text-shadow-lg line-clamp-2 text-lg font-black leading-tight text-white md:text-3xl">
               {content.title}
             </h3>
           </div>
         </div>
 
         {/* Content Section - More compact on mobile */}
-        <div className="space-y-2 p-3 md:space-y-5 md:p-5">
+        <div className="space-y-1.5 p-2.5 md:space-y-5 md:p-5">
           {/* Summary - 2 lines on mobile */}
           <p className="hidden text-sm leading-relaxed text-neutral-400 md:line-clamp-2">
             {content.summary}

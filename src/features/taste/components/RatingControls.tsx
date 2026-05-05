@@ -24,10 +24,10 @@ export function RatingControls({
   ];
 
   return (
-    <div className="space-y-2 md:space-y-4">
+    <div className="space-y-1.5 md:space-y-4">
       {/* Rating label - Simplified on mobile */}
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-neutral-400 md:text-sm">
+        <span className="text-[11px] font-medium text-neutral-400 md:text-sm">
           {rating > 0 ? (
             <span className="text-white">{ratingLabels[rating - 1]}</span>
           ) : (
@@ -46,14 +46,14 @@ export function RatingControls({
       </div>
 
       {/* Star rating buttons - Larger touch targets */}
-      <div className="flex items-center gap-1.5 md:gap-2" aria-label={`${contentTitle} 별점`}>
+      <div className="flex items-center gap-1 md:gap-2" aria-label={`${contentTitle} 별점`}>
         <div className="flex flex-1 gap-1 md:gap-1.5">
           {[1, 2, 3, 4, 5].map((value) => (
             <button
               key={value}
               type="button"
               onClick={() => onRate(value)}
-              className={`star-btn relative flex h-11 flex-1 items-center justify-center rounded-xl border text-base font-black transition-all md:h-14 md:text-lg ${
+              className={`star-btn relative flex h-10 flex-1 items-center justify-center rounded-lg border text-sm font-black transition-all md:h-14 md:rounded-xl md:text-lg ${
                 rating >= value
                   ? 'border-netflix-red bg-netflix-red text-white shadow-lg shadow-netflix-red/30'
                   : 'border-white/10 bg-white/5 text-neutral-500 active:border-netflix-red/50 active:bg-netflix-red/10 active:text-netflix-red md:hover:border-netflix-red/50 md:hover:bg-netflix-red/10 md:hover:text-netflix-red'
@@ -64,7 +64,7 @@ export function RatingControls({
               {/* Star icon for selected ratings */}
               {rating >= value && (
                 <svg
-                  className="absolute right-1 top-1 h-2.5 w-2.5 text-white/80 md:right-1.5 md:top-1.5 md:h-3 md:w-3"
+                  className="absolute right-0.5 top-0.5 h-2 w-2 text-white/80 md:right-1.5 md:top-1.5 md:h-3 md:w-3"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -80,7 +80,7 @@ export function RatingControls({
           type="button"
           onClick={onSkip}
           aria-label={`${contentTitle} 안봤어요`}
-          className={`flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl border px-2.5 text-sm font-bold transition-all md:h-14 md:gap-2 md:px-4 ${
+          className={`flex h-10 shrink-0 items-center justify-center gap-1 rounded-lg border px-2 text-xs font-bold transition-all md:h-14 md:gap-2 md:rounded-xl md:px-4 md:text-sm ${
             isSkipped
               ? 'border-neutral-600 bg-neutral-700 text-white'
               : 'border-white/10 bg-white/5 text-neutral-400 active:border-neutral-500 active:bg-neutral-800 active:text-white md:hover:border-neutral-500 md:hover:bg-neutral-800 md:hover:text-white'

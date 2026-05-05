@@ -22,11 +22,11 @@ export function TasteTestFooter({
   onSubmit,
 }: TasteTestFooterProps) {
   return (
-    <div className="z-20 mt-2 shrink-0 md:sticky md:bottom-0 md:mt-8">
+    <div className="z-20 mt-1.5 shrink-0 md:sticky md:bottom-0 md:mt-8">
       {/* Blur gradient backdrop */}
       <div className="hidden absolute inset-0 -top-6 bg-gradient-to-t from-netflix-black via-netflix-black/95 to-transparent md:block md:-top-8" />
 
-      <div className="relative mx-auto max-w-lg space-y-2 pb-1 pt-0 md:space-y-4 md:pb-6 md:pt-4">
+      <div className="relative mx-auto max-w-[340px] space-y-2 pb-1 pt-0 sm:max-w-lg md:space-y-4 md:pb-6 md:pt-4">
         {/* Status message - Compact on mobile */}
         <div className="hidden items-center justify-center md:flex">
           {isLast && canSubmit ? (
@@ -62,7 +62,7 @@ export function TasteTestFooter({
             type="button"
             onClick={onPrevious}
             disabled={currentIndex === 0}
-            className="group flex h-11 items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-white/5 font-bold text-white transition-all active:bg-white/10 disabled:border-neutral-800 disabled:bg-transparent disabled:text-neutral-700 md:h-14 md:gap-2 md:hover:border-white/20 md:hover:bg-white/10"
+            className="group flex h-10 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 text-sm font-bold text-white transition-all active:bg-white/10 disabled:border-neutral-800 disabled:bg-transparent disabled:text-neutral-700 md:h-14 md:gap-2 md:rounded-xl md:text-base md:hover:border-white/20 md:hover:bg-white/10"
           >
             <svg
               className="h-4 w-4 transition-transform group-active:-translate-x-0.5 group-disabled:transform-none md:h-5 md:w-5 md:group-hover:-translate-x-1"
@@ -80,7 +80,7 @@ export function TasteTestFooter({
               type="button"
               onClick={onSubmit}
               disabled={!canSubmit || isSubmitting}
-              className="btn-netflix group relative flex h-11 items-center justify-center gap-1.5 overflow-hidden rounded-xl text-sm disabled:bg-neutral-800 disabled:text-neutral-500 disabled:shadow-none md:h-14 md:gap-2 md:text-lg"
+              className="btn-netflix group relative flex h-10 items-center justify-center gap-1.5 overflow-hidden rounded-lg text-sm disabled:bg-neutral-800 disabled:text-neutral-500 disabled:shadow-none md:h-14 md:gap-2 md:rounded-xl md:text-lg"
             >
               {isSubmitting ? (
                 <>
@@ -103,7 +103,7 @@ export function TasteTestFooter({
             <button
               type="button"
               onClick={onNext}
-              className="btn-netflix group flex h-11 items-center justify-center gap-1.5 rounded-xl text-sm md:h-14 md:gap-2 md:text-lg"
+              className="btn-netflix group flex h-10 items-center justify-center gap-1.5 rounded-lg text-sm md:h-14 md:gap-2 md:rounded-xl md:text-lg"
             >
               <span>다음</span>
               <svg
