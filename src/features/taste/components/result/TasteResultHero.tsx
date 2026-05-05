@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import { TasteMbtiResult } from '../../types';
+import { TasteResultCharacter } from './TasteResultCharacter';
 
 interface TasteResultHeroProps {
   copied: boolean;
+  compact?: boolean;
   result: TasteMbtiResult;
   shareNotice: string;
   onInstagramShare: () => Promise<void>;
@@ -14,6 +16,7 @@ interface TasteResultHeroProps {
 
 export function TasteResultHero({
   copied,
+  compact = false,
   result,
   shareNotice,
   onInstagramShare,
@@ -21,34 +24,72 @@ export function TasteResultHero({
   onNativeShare,
 }: TasteResultHeroProps) {
   return (
-    <div className="animate-fade-in rounded-2xl border border-netflix-red/20 bg-gradient-to-br from-netflix-red/10 via-neutral-900/90 to-neutral-950/90 p-5 shadow-xl backdrop-blur-sm md:rounded-3xl md:p-8">
-      <div className="inline-flex items-center gap-1.5 rounded-full bg-netflix-red/20 px-3 py-1.5 md:gap-2 md:px-4 md:py-2">
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-netflix-red opacity-75" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-netflix-red" />
-        </span>
-        <span className="text-xs font-semibold tracking-wide text-netflix-red md:text-sm">
-          작품 취향 코드
-        </span>
+    <div
+      className={`animate-fade-in rounded-2xl border border-netflix-red/20 bg-gradient-to-br from-netflix-red/10 via-neutral-900/90 to-neutral-950/90 shadow-xl backdrop-blur-sm ${
+        compact ? 'p-3 md:p-4' : 'p-5 md:rounded-3xl md:p-8'
+      }`}
+    >
+      {/* 캐릭터와 코드 영역 */}
+      <div className={`flex items-start gap-4 ${compact ? 'gap-3' : 'gap-4 md:gap-6'}`}>
+        {/* 캐릭터 */}
+        <TasteResultCharacter
+          code={result.code}
+          className={compact ? 'h-24 w-24 flex-shrink-0' : 'h-28 w-28 flex-shrink-0 md:h-40 md:w-40'}
+        />
+
+        {/* 코드 정보 */}
+        <div className="flex-1 min-w-0">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-netflix-red/20 px-3 py-1.5 md:gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-netflix-red opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-netflix-red" />
+            </span>
+            <span className="text-xs font-semibold tracking-wide text-netflix-red md:text-sm">
+              작품 취향 코드
+            </span>
+          </div>
+
+          <h1
+            className={`font-black tracking-tight text-white ${
+              compact
+                ? 'mt-2 text-4xl md:text-5xl'
+                : 'mt-2 text-5xl md:mt-3 md:text-6xl lg:text-7xl'
+            }`}
+          >
+            {result.code}
+          </h1>
+
+          <h2
+            className={`font-black text-white ${
+              compact
+                ? 'mt-1 text-lg md:text-xl'
+                : 'mt-1 text-xl md:mt-2 md:text-2xl lg:text-3xl'
+            }`}
+          >
+            {result.title}
+          </h2>
+        </div>
       </div>
 
-      <h1 className="mt-4 text-5xl font-black tracking-tight text-white md:mt-6 md:text-7xl lg:text-8xl">
-        {result.code}
-      </h1>
-      <h2 className="mt-2 text-2xl font-black text-white md:mt-4 md:text-3xl lg:text-4xl">
-        {result.title}
-      </h2>
-      <p className="mt-1 text-base text-netflix-red md:mt-2 md:text-xl">
+      <p className={`text-sm text-netflix-red ${compact ? 'mt-2' : 'mt-3 md:mt-4 md:text-lg'}`}>
         {result.subtitle}
       </p>
-      <p className="mt-4 text-sm leading-relaxed text-neutral-300 md:mt-6 md:text-lg">
+      <p
+        className={`text-sm leading-relaxed text-neutral-300 ${
+          compact ? 'mt-2 line-clamp-2' : 'mt-4 md:mt-6 md:text-lg'
+        }`}
+      >
         {result.description}
       </p>
-      <p className="mt-3 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs leading-relaxed text-neutral-400 md:text-sm">
+      <p
+        className={`mt-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs leading-relaxed text-neutral-400 ${
+          compact ? 'hidden md:block' : 'md:text-sm'
+        }`}
+      >
         이 결과는 작품 평점 패턴을 바탕으로 만든 콘텐츠 취향 분석입니다.
       </p>
 
-      <div className="mt-6 space-y-3 md:mt-8">
+      <div className={compact ? 'mt-3 space-y-2' : 'mt-6 space-y-3 md:mt-8'}>
         <p className="text-xs font-semibold text-neutral-400 md:text-sm">
           결과 공유하기
         </p>
@@ -96,7 +137,7 @@ export function TasteResultHero({
         ) : null}
       </div>
 
-      <div className="mt-6 md:mt-8">
+      <div className={compact ? 'hidden' : 'mt-6 md:mt-8'}>
         <Link
           href="/"
           className="group inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs font-semibold text-neutral-400 transition-colors active:bg-white/10 md:gap-2 md:px-4 md:py-2 md:text-sm md:hover:bg-white/10 md:hover:text-white"

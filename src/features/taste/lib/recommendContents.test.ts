@@ -41,7 +41,7 @@ const SAMPLE_AXES: TasteAxisResult[] = [
     rightCode: 'R',
     selectedCode: 'P',
     label: '몰입 포인트',
-    leftLabel: '플롯 주도',
+    leftLabel: '이야기 전개',
     rightLabel: '관계 주도',
     confidence: 'medium',
     leftScore: 0.69,

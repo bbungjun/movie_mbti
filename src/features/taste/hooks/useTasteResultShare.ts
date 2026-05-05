@@ -1,6 +1,8 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { getTMDBImageUrl } from '@/lib/utils';
+import { getContentById } from '../data/streamingContents';
 import { TasteMbtiResult } from '../types';
 
 declare global {
@@ -39,10 +41,18 @@ export function useTasteResultShare(result: TasteMbtiResult | null) {
       return null;
     }
 
-    const url = window.location.href;
-    const text = `🎬 Netflix 작품 취향 코드: ${result.code}, ${result.title}!`;
+    const url = new URL(window.location.pathname, window.location.origin);
+    url.searchParams.set('share', '1');
 
-    return { url, text };
+    const text = `Netflix 작품 취향 코드 ${result.code}: ${result.title}`;
+    const firstContent = result.recommendedContentIds
+      .map((contentId) => getContentById(contentId))
+      .find((content) => content?.posterPath);
+    const imageUrl = firstContent?.posterPath
+      ? getTMDBImageUrl(firstContent.posterPath, 'w500')
+      : `${window.location.origin}/placeholder-poster.svg`;
+
+    return { imageUrl, text, url: url.toString() };
   }, [result]);
 
   const copyShareLink = useCallback(
@@ -83,15 +93,29 @@ export function useTasteResultShare(result: TasteMbtiResult | null) {
   }, [copyShareLink, getSharePayload]);
 
   const handleInstagramShare = useCallback(async () => {
+    const payload = getSharePayload();
+    if (!payload) {
+      return;
+    }
+
+    if (navigator.share) {
+      await navigator.share({
+        title: 'Netflix 작품 취향 코드 결과',
+        text: payload.text,
+        url: payload.url,
+      });
+      return;
+    }
+
     await copyShareLink(
       '링크를 복사했어요. 인스타 DM이나 스토리에 붙여넣어 공유해보세요.'
     );
     window.open(
-      'https://www.instagram.com/direct/inbox/',
+      'https://www.instagram.com/',
       '_blank',
       'noopener,noreferrer'
     );
-  }, [copyShareLink]);
+  }, [copyShareLink, getSharePayload]);
 
   const handleKakaoShare = useCallback(async () => {
     const payload = getSharePayload();
@@ -120,9 +144,9 @@ export function useTasteResultShare(result: TasteMbtiResult | null) {
       window.Kakao.Share?.sendDefault({
         objectType: 'feed',
         content: {
-          title: `🎬 Netflix 작품 취향 코드: ${result.code}`,
+          title: `Netflix 작품 취향 코드: ${result.code}`,
           description: `${result.title} - ${result.subtitle}`,
-          imageUrl: `${window.location.origin}/placeholder-poster.svg`,
+          imageUrl: payload.imageUrl,
           link: {
             mobileWebUrl: payload.url,
             webUrl: payload.url,

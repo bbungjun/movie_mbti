@@ -5,7 +5,7 @@ const TRAIT_LABELS: Record<string, string> = {
   afterglow: '여운',
   concept: '설정 주도',
   emotionDriven: '정서 주도',
-  plotDriven: '플롯 주도',
+  plotDriven: '이야기 전개',
   relationshipDriven: '관계 주도',
   stimulation: '자극과 속도감',
   emotion: '감정선',

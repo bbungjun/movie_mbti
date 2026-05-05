@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createNewSession } from '@/lib/utils';
 import { analyzeTasteMbti } from '../lib/analyzeTasteMbti';
+import { persistTasteResult } from '../lib/persistTasteResult';
 import {
   clearInProgressTest,
   saveTasteResult,
@@ -46,6 +47,9 @@ export function useTasteTestSubmission(session: TasteTestSession) {
     );
 
     saveTasteResult(result);
+    persistTasteResult(result).catch((error) => {
+      console.error('Failed to save taste result to database', error);
+    });
     clearInProgressTest();
     setPendingResultId(result.id);
   }, [

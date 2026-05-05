@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { getContentById } from '../data/streamingContents';
-import { getTasteResult } from '../storage/localTasteResultStorage';
+import { getTasteResult, saveTasteResult } from '../storage/localTasteResultStorage';
 import { StreamingContent, TasteMbtiResult } from '../types';
 
 interface RatedContentEntry {
@@ -12,9 +12,54 @@ interface RatedContentEntry {
 
 export function useTasteResult(resultId: string) {
   const [result, setResult] = useState<TasteMbtiResult | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setResult(getTasteResult(resultId));
+    let isActive = true;
+    const localResult = getTasteResult(resultId);
+
+    if (localResult) {
+      setResult(localResult);
+      setIsLoading(false);
+      return () => {
+        isActive = false;
+      };
+    }
+
+    setIsLoading(true);
+    fetch(`/api/taste-results?id=${encodeURIComponent(resultId)}`)
+      .then((response) => {
+        if (!response.ok) {
+          return null;
+        }
+
+        return response.json() as Promise<TasteMbtiResult>;
+      })
+      .then((remoteResult) => {
+        if (!isActive) {
+          return;
+        }
+
+        if (remoteResult) {
+          saveTasteResult(remoteResult);
+        }
+
+        setResult(remoteResult);
+      })
+      .catch(() => {
+        if (isActive) {
+          setResult(null);
+        }
+      })
+      .finally(() => {
+        if (isActive) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
   }, [resultId]);
 
   const ratedContents = useMemo<RatedContentEntry[]>(() => {
@@ -42,6 +87,7 @@ export function useTasteResult(resultId: string) {
   }, [result]);
 
   return {
+    isLoading,
     result,
     ratedContents,
     recommendedContents,

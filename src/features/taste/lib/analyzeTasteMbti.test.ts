@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { RESULT_COPY } from '../data/resultCopy';
+import { ContentRating } from '../types';
 import { analyzeTasteMbti } from './analyzeTasteMbti';
 
 const SAMPLE_RATINGS = [
@@ -56,4 +58,61 @@ describe('analyzeTasteMbti', () => {
       result.recommendedContentIds.every((contentId) => !excludedIds.has(contentId))
     ).toBe(true);
   });
+
+  it.each([
+    {
+      code: 'DCP',
+      ratings: [{ contentId: 'squid-game', rating: 5 }],
+    },
+    {
+      code: 'DCR',
+      ratings: [
+        { contentId: 'all-of-us-are-dead', rating: 5 },
+        { contentId: 'gyeongseong-creature', rating: 5 },
+      ],
+    },
+    {
+      code: 'DEP',
+      ratings: [{ contentId: 'bloodhounds', rating: 5 }],
+    },
+    {
+      code: 'DER',
+      ratings: [{ contentId: 'all-of-us-are-dead', rating: 5 }],
+    },
+    {
+      code: 'ACP',
+      ratings: [{ contentId: 'forest-of-secrets', rating: 5 }],
+    },
+    {
+      code: 'ACR',
+      ratings: [{ contentId: 'alchemy-of-souls', rating: 5 }],
+    },
+    {
+      code: 'AEP',
+      ratings: [{ contentId: 'the-glory', rating: 5 }],
+    },
+    {
+      code: 'AER',
+      ratings: [{ contentId: 'when-life-gives-you-tangerines', rating: 5 }],
+    },
+  ] satisfies Array<{ code: keyof typeof RESULT_COPY; ratings: ContentRating[] }>)(
+    'classifies ratings as $code and returns the matching result copy',
+    ({ code, ratings }) => {
+      const result = analyzeTasteMbti(
+        ratings,
+        `session-${code}`,
+        `result-${code}`
+      );
+
+      expect(result.code).toBe(code);
+      expect(result.axisResults.map((axis) => axis.selectedCode).join('')).toBe(
+        code
+      );
+      expect(result.title).toBe(RESULT_COPY[code].title);
+      expect(result.subtitle).toBe(RESULT_COPY[code].subtitle);
+      expect(result.description).toBe(RESULT_COPY[code].description);
+      expect(result.strengths).toEqual(RESULT_COPY[code].strengths);
+      expect(result.watchStyle).toBe(RESULT_COPY[code].watchStyle);
+    }
+  );
 });

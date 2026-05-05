@@ -1,0 +1,42 @@
+
+> movie-cup@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+  ▲ Next.js 14.2.35
+  - Local:        http://127.0.0.1:3000
+  - Network:      http://127.0.0.1:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1368ms
+ ○ Compiling / ...
+ ✓ Compiled / in 5.2s (585 modules)
+ GET / 200 in 5252ms
+ GET / 200 in 205ms
+ GET / 200 in 732ms
+ GET /_next/static/webpack/7d369d4aa1cfe6d4.webpack.hot-update.json 404 in 5485ms
+ GET / 200 in 60ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 17ms
+ ✓ Compiled /favicon.ico in 170ms (330 modules)
+ GET /favicon.ico 200 in 237ms
+ GET / 200 in 122ms
+ GET / 200 in 41ms
+ ✓ Compiled /api/taste-results in 307ms (397 modules)
+ POST /api/taste-results 500 in 364ms
+ ✓ Compiled /result/[id] in 198ms (696 modules)
+ GET / 200 in 85ms
+ ✓ Compiled in 278ms (609 modules)
+ ✓ Compiled in 128ms (300 modules)
+ ✓ Compiled in 200ms (609 modules)
+ GET /result/2b35cd7f-d2a5-4658-ad1e-e348c1ffacb8 200 in 107ms
+ ✓ Compiled in 211ms (609 modules)
+ ✓ Compiled in 340ms (609 modules)
+ ✓ Compiled in 171ms (609 modules)
+ ✓ Compiled in 250ms (609 modules)
+ ✓ Compiled in 204ms (609 modules)
+ ✓ Compiled in 256ms (609 modules)
+ ✓ Compiled in 185ms (609 modules)
+ ✓ Compiled in 174ms (609 modules)
+ ✓ Compiled /_not-found in 132ms (311 modules)
+ GET /_next/static/css/app/layout.css?v=1777963388985 404 in 233ms
+[?25h

@@ -437,18 +437,6 @@ export const STREAMING_CONTENTS: StreamingContent[] = [
     traits: { stimulation: 44, emotion: 90, imagination: 84, realism: 36, structure: 58, relationship: 88, closure: 78, novelty: 66 },
     profileAxes: { dopamine: 52, afterglow: 87, concept: 75, emotionDriven: 81, plotDriven: 62, relationshipDriven: 84 },
   },
-  {
-    id: 'moving',
-    title: '무빙',
-    type: 'series',
-    genres: ['슈퍼히어로', '액션', '드라마'],
-    posterPath: '/b9MhD5syJ7TbYSeje4wB4oyTzc7.jpg',
-    year: '2023',
-    providers: ['disney-plus'],
-    summary: '특수 능력을 숨긴 채 살아가는 부모와 아이들의 이야기가 과거와 현재를 넘나드는 슈퍼히어로 드라마.',
-    traits: { stimulation: 72, emotion: 86, imagination: 88, realism: 46, structure: 64, relationship: 88, closure: 68, novelty: 78 },
-    profileAxes: { dopamine: 72, afterglow: 82, concept: 81, emotionDriven: 81, plotDriven: 66, relationshipDriven: 83 },
-  },
   // S축 보강 + 다양성
   {
     id: 'vincenzo',

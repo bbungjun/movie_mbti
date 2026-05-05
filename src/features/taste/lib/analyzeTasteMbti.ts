@@ -40,7 +40,7 @@ const AXIS_CONFIG = [
     leftKey: 'plotDriven',
     rightKey: 'relationshipDriven',
     label: '몰입 포인트',
-    leftLabel: '플롯 주도',
+    leftLabel: '이야기 전개',
     rightLabel: '관계 주도',
   },
 ] as const;
