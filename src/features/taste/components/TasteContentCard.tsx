@@ -19,6 +19,9 @@ export function TasteContentCard({
   onRate,
   onSkip,
 }: TasteContentCardProps) {
+  const posterUrl = getTMDBImageUrl(content.posterPath, 'w342');
+  const posterSrcSet = getTMDBPosterSrcSet(content.posterPath);
+
   return (
     <article className="group mx-auto min-h-0 w-full max-w-[340px] shrink-0 animate-scale-in sm:max-w-lg">
       <div
@@ -30,20 +33,35 @@ export function TasteContentCard({
               : 'border-white/10'
         }`}
       >
-        {/* Poster Section - Shorter aspect ratio on mobile */}
-        <div className="relative h-[31dvh] min-h-[178px] overflow-hidden bg-neutral-800 sm:aspect-[2/3] sm:h-auto">
+        {/* Poster Section */}
+        <div className="relative h-[clamp(280px,52dvh,430px)] overflow-hidden bg-neutral-800 sm:aspect-[2/3] sm:h-auto">
           {/* TMDB already serves CDN-resized posters; direct srcSet avoids cold Vercel optimizer hops between cards. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={getTMDBImageUrl(content.posterPath, 'w342')}
-            srcSet={getTMDBPosterSrcSet(content.posterPath)}
+            src={posterUrl}
+            alt=""
+            aria-hidden="true"
+            onError={(event) => {
+              event.currentTarget.src = '/placeholder-poster.svg';
+            }}
+            className={`absolute inset-0 h-full w-full scale-110 object-cover opacity-35 blur-xl transition-all duration-500 ${
+              isSkipped ? 'opacity-20 grayscale' : ''
+            }`}
+            sizes="(max-width: 640px) 92vw, 512px"
+            loading="eager"
+            decoding="async"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={posterUrl}
+            srcSet={posterSrcSet}
             alt={content.title}
             onError={(event) => {
               event.currentTarget.src = '/placeholder-poster.svg';
               event.currentTarget.srcset = '';
             }}
-            className={`absolute inset-0 h-full w-full object-cover transition-all duration-500 ${
-              isSkipped ? 'scale-105 opacity-30 grayscale' : ''
+            className={`absolute inset-0 h-full w-full object-contain transition-all duration-500 ${
+              isSkipped ? 'scale-95 opacity-30 grayscale' : ''
             }`}
             sizes="(max-width: 640px) 92vw, 512px"
             loading="eager"
@@ -51,7 +69,7 @@ export function TasteContentCard({
           />
 
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/95 via-neutral-900/10 to-transparent" />
 
           {/* Top badges - Smaller on mobile */}
           <div className="absolute left-0 right-0 top-0 flex items-start justify-between p-2 md:p-4">
@@ -102,7 +120,7 @@ export function TasteContentCard({
           )}
 
           {/* Bottom content info overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-2.5 md:p-5">
+          <div className="absolute bottom-0 left-0 right-0 p-2 md:p-5">
             <h3 className="text-shadow-lg line-clamp-2 text-lg font-black leading-tight text-white md:text-3xl">
               {content.title}
             </h3>
